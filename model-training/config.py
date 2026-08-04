@@ -1,20 +1,20 @@
-# Dataset Path
+# Dataset Configuration
+
 DATASET_PATH = "dataset"
 
-# Image Size
-IMAGE_SIZE = (224, 224)
+IMAGE_HEIGHT = 224
+IMAGE_WIDTH = 224
 
-# Batch Size
+IMAGE_SIZE = (IMAGE_HEIGHT, IMAGE_WIDTH)
+
 BATCH_SIZE = 32
 
-# Epochs
 EPOCHS = 25
 
-# Model Save Path
+SEED = 42
+
+VALIDATION_SPLIT = 0.2
+
 MODEL_PATH = "models/skin_tone_model.keras"
 
-# Class Names File
-CLASS_FILE = "models/class_names.json"
-
-# Random Seed
-SEED = 42
+CLASS_NAMES_PATH = "models/class_names.json"
