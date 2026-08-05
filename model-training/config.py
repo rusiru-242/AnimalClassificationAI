@@ -1,20 +1,67 @@
+import os
+
+
+# =====================
 # Dataset Configuration
+# =====================
 
 DATASET_PATH = "dataset"
 
-IMAGE_HEIGHT = 224
-IMAGE_WIDTH = 224
+IMAGE_SIZE = (224, 224)
 
-IMAGE_SIZE = (IMAGE_HEIGHT, IMAGE_WIDTH)
-
-BATCH_SIZE = 32
-
-EPOCHS = 25
-
-SEED = 42
+BATCH_SIZE = 16
 
 VALIDATION_SPLIT = 0.2
 
-MODEL_PATH = "models/skin_tone_model.keras"
+SEED = 42
 
-CLASS_NAMES_PATH = "models/class_names.json"
+
+# =====================
+# Training Configuration
+# =====================
+
+EPOCHS = 1
+
+LEARNING_RATE = 0.0001
+
+
+# =====================
+# Model Configuration
+# =====================
+
+MODEL_DIR = "models"
+
+MODEL_PATH = os.path.join(
+    MODEL_DIR,
+    "skin_tone_model.keras"
+)
+
+CLASS_NAMES_PATH = os.path.join(
+    MODEL_DIR,
+    "class_names.json"
+)
+
+
+# =====================
+# Output Configuration
+# =====================
+
+OUTPUT_DIR = "outputs"
+
+
+ACCURACY_GRAPH = os.path.join(
+    OUTPUT_DIR,
+    "accuracy.png"
+)
+
+LOSS_GRAPH = os.path.join(
+    OUTPUT_DIR,
+    "loss.png"
+)
+
+
+# =====================
+# Classes
+# =====================
+
+NUM_CLASSES = 4
