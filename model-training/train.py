@@ -1,11 +1,16 @@
 import os
 import json
-import matplotlib.pyplot as plt
 import tensorflow as tf
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 from tensorflow.keras import layers, Model
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 from tensorflow.keras.callbacks import (
     EarlyStopping,
@@ -40,6 +45,16 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # ==============================
 
 train_dataset, validation_dataset, class_names = load_datasets()
+
+print("Reading one batch...")
+
+for images, labels in train_dataset.take(1):
+    print(images.shape)
+    print(labels.shape)
+
+print("Dataset OK")
+
+
 
 NUM_CLASSES = len(class_names)
 
@@ -178,6 +193,9 @@ model.compile(
 
 model.summary()
 
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
+
 
 
 # ==============================
@@ -194,7 +212,6 @@ early_stop = EarlyStopping(
     restore_best_weights=True
 
 )
-
 
 
 checkpoint = ModelCheckpoint(
@@ -230,23 +247,33 @@ reduce_lr = ReduceLROnPlateau(
 # ==============================
 # Train Model
 # ==============================
+print("\n==============================")
+print("Testing first batch...")
+print("==============================")
+
+# images, labels = next(iter(train_dataset))
+
+for images, labels in train_dataset.take(1):
+    print("Images Shape:", images.shape)
+    print("Labels Shape:", labels.shape)
+
+print("Images Shape :", images.shape)
+print("Labels Shape :", labels.shape)
+
+print("First 10 Labels :", labels[:10].numpy())
+
+
 
 history = model.fit(
-
     train_dataset,
-
     validation_data=validation_dataset,
-
     epochs=EPOCHS,
-
     callbacks=[
         early_stop,
-        checkpoint,
-        reduce_lr
-    ]
-
+        checkpoint
+    ],
+    verbose=1
 )
-
 
 
 # ==============================
@@ -371,3 +398,31 @@ print(
     "Loss Graph:",
     LOSS_GRAPH
 )
+
+
+plt.figure(figsize=(8,5))
+
+plt.plot(history.history["accuracy"], label="Train Accuracy")
+plt.plot(history.history["val_accuracy"], label="Validation Accuracy")
+
+plt.title("Training Accuracy")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.legend()
+
+plt.savefig("outputs/accuracy.png")
+plt.close()
+
+
+plt.figure(figsize=(8,5))
+
+plt.plot(history.history["loss"], label="Train Loss")
+plt.plot(history.history["val_loss"], label="Validation Loss")
+
+plt.title("Training Loss")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.legend()
+
+plt.savefig("outputs/loss.png")
+plt.close()

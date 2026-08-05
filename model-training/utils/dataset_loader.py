@@ -73,15 +73,17 @@ def load_datasets():
 
     AUTOTUNE = tf.data.AUTOTUNE
 
-
     train_dataset = (
-     train_dataset
-     .shuffle(1000)
-     .prefetch(AUTOTUNE)
-    )
+    train_dataset
+    .shuffle(500)
+    .prefetch(AUTOTUNE)
+        )
 
 
-    validation_dataset = validation_dataset.prefetch(AUTOTUNE)
+    validation_dataset = (
+    validation_dataset
+    .prefetch(AUTOTUNE)
+        )
 
 
     return (
