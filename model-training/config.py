@@ -20,7 +20,7 @@ SEED = 42
 # Training Configuration
 # =====================
 
-EPOCHS = 1
+EPOCHS = 20
 
 LEARNING_RATE = 0.0001
 
