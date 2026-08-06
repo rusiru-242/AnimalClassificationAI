@@ -204,14 +204,18 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
 early_stop = EarlyStopping(
-
     monitor="val_loss",
-
-    patience=5,
-
+    patience=8,
     restore_best_weights=True
-
 )
+
+
+base_model.trainable = True
+
+
+for layer in base_model.layers[:-30]:
+    layer.trainable = False
+
 
 
 checkpoint = ModelCheckpoint(
@@ -263,6 +267,8 @@ print("Labels Shape :", labels.shape)
 print("First 10 Labels :", labels[:10].numpy())
 
 
+print("Patience =", early_stop.patience)
+print("Epochs:", EPOCHS)
 
 history = model.fit(
     train_dataset,

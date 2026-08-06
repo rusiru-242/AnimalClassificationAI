@@ -22,7 +22,7 @@ SEED = 42
 
 EPOCHS = 20
 
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.00001
 
 
 # =====================
