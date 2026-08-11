@@ -11,6 +11,7 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ReduceLROnPlateau
 
 from tensorflow.keras.callbacks import (
     EarlyStopping,
@@ -83,15 +84,24 @@ validation_dataset = validation_dataset.map(
 # Data Augmentation
 # ==============================
 
-data_augmentation = tf.keras.Sequential(
-    [
-        layers.RandomFlip("horizontal"),
-        layers.RandomRotation(0.15),
-        layers.RandomZoom(0.15),
-        layers.RandomContrast(0.15),
-    ],
-    name="data_augmentation"
-)
+data_augmentation = tf.keras.Sequential([
+
+    layers.RandomFlip("horizontal"),
+
+    layers.RandomRotation(0.15),
+
+    layers.RandomZoom(0.15),
+
+    layers.RandomContrast(0.15),
+
+    layers.RandomBrightness(0.2),
+
+    layers.RandomTranslation(
+        0.1,
+        0.1
+    )
+
+])
 
 
 
@@ -116,7 +126,12 @@ base_model = MobileNetV2(
 
 # Freeze pretrained layers
 
-base_model.trainable = False
+base_model.trainable = True
+
+
+for layer in base_model.layers[:-50]:
+
+    layer.trainable = False
 
 
 
@@ -145,7 +160,7 @@ x = base_model(
 x = layers.GlobalAveragePooling2D()(x)
 
 
-x = layers.Dropout(0.3)(x)
+x = layers.Dropout(0.5)(x)
 
 
 x = layers.Dense(
@@ -204,9 +219,26 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
 early_stop = EarlyStopping(
+
     monitor="val_loss",
-    patience=8,
+
+    patience=5,
+
     restore_best_weights=True
+
+)
+
+
+reduce_lr = ReduceLROnPlateau(
+
+    monitor="val_loss",
+
+    factor=0.2,
+
+    patience=3,
+
+    min_lr=0.0000001
+
 )
 
 
@@ -234,17 +266,6 @@ checkpoint = ModelCheckpoint(
 
 
 
-reduce_lr = ReduceLROnPlateau(
-
-    monitor="val_loss",
-
-    factor=0.2,
-
-    patience=3,
-
-    min_lr=0.000001
-
-)
 
 
 
@@ -275,9 +296,14 @@ history = model.fit(
     validation_data=validation_dataset,
     epochs=EPOCHS,
     callbacks=[
-        early_stop,
-        checkpoint
-    ],
+
+    early_stop,
+
+    #educe_lr,
+
+    checkpoint
+
+],
     verbose=1
 )
 
