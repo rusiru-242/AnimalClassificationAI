@@ -64,4 +64,5 @@ LOSS_GRAPH = os.path.join(
 # Classes
 # =====================
 
-NUM_CLASSES = 4
+NUM_CLASSES = 90
+
